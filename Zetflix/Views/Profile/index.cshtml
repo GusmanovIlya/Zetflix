@@ -1,0 +1,172 @@
+@model Zetflix.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = T["Profile"];
+    var user = Model.User;
+}
+
+<section>
+    <div class="card border-0 rounded-4 overflow-hidden">
+        <div class="row g-0 align-items-stretch">
+            <div class="col-lg-4">
+                <div class="h-100 d-flex align-items-center justify-content-center p-5"
+                     style="min-height: 420px; background: linear-gradient(180deg, rgba(20,20,20,0.12) 0%, rgba(20,20,20,0.45) 100%), url('/assets/images/pages/01.webp') center/cover no-repeat;">
+                    <div class="text-center">
+                        <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex align-items-center justify-content-center"
+                             style="width: 96px; height: 96px;">
+                            <i class="ph-fill ph-user fs-1"></i>
+                        </div>
+                        <h3 class="mt-4 mb-1 text-white">@user.UserName</h3>
+                        <p class="text-white-50 mb-0">@user.Email</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card-body p-4 p-xl-5">
+                    <span class="text-primary fw-semibold">@T["Profile"]</span>
+                    <h1 class="mt-2 mb-4">@T["ProfileInfo"]</h1>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card bg-body border-0 rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="mb-2">@T["UserName"]</h6>
+                                    <p class="mb-0 text-body-secondary">@user.UserName</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card bg-body border-0 rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="mb-2">Email</h6>
+                                    <p class="mb-0 text-body-secondary">@user.Email</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card bg-body border-0 rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="mb-2">@T["Role"]</h6>
+                                    <p class="mb-0 text-body-secondary">
+                                        @(user.Role?.Name ?? T["NotSpecified"])
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card bg-body border-0 rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="mb-2">@T["Subscription"]</h6>
+                                    <p class="mb-0 text-body-secondary">
+                                        @if (user.Subscription != null)
+                                        {
+                                            <span>@user.Subscription.Name - @user.Subscription.Price.ToString("0") RUB</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@T["NotSpecified"]</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex flex-wrap gap-2">
+                        <a asp-controller="Reviews" asp-action="Index" class="btn btn-primary">
+                            @T["MyReviews"]
+                        </a>
+                        <a asp-controller="Subscriptions" asp-action="Index" class="btn btn-outline-light">
+                            @T["ChooseSubscription"]
+                        </a>
+                        @if (user.Subscription != null)
+                        {
+                            <form asp-controller="Subscriptions" asp-action="Cancel" method="post" class="m-0">
+                                <button type="submit" class="btn btn-outline-danger">
+                                    @T["CancelSubscription"]
+                                </button>
+                            </form>
+                        }
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light">
+                            @T["HomeButton"]
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding-top">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <span class="text-primary fw-semibold">@T["Activity"]</span>
+            <h2 class="mb-0">@T["MyReviews"]</h2>
+        </div>
+        <a asp-controller="Reviews" asp-action="Create" class="btn btn-primary">
+            @T["AddReview"]
+        </a>
+    </div>
+
+    @if (!Model.Reviews.Any())
+    {
+        <div class="card border-0 rounded-4">
+            <div class="card-body p-4">
+                <p class="mb-0 text-body-secondary">@T["NoMyReviews"]</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-lg-2 g-4">
+            @foreach (var review in Model.Reviews)
+            {
+                var contentTitle = review.Movie != null
+                    ? review.Movie.Title
+                    : review.Show != null ? review.Show.Title : T["ContentNotSpecified"];
+                var contentController = review.Movie != null ? "Movies" : "Shows";
+                var contentId = review.Movie?.Id ?? review.Show?.Id;
+
+                <div class="col">
+                    <div class="card border-0 rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                                <div>
+                                    <h4 class="mb-1">@contentTitle</h4>
+                                    <div class="text-body-secondary">@T["YourReview"]</div>
+                                </div>
+                                <div class="text-warning text-nowrap">
+                                    @for (var i = 1; i <= 5; i++)
+                                    {
+                                        <i class="@(i <= review.Rating ? "ph-fill" : "ph") ph-star"></i>
+                                    }
+                                </div>
+                            </div>
+
+                            <p class="text-body-secondary mb-4">@review.Comment</p>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                @if (contentId != null)
+                                {
+                                    <a asp-controller="@contentController" asp-action="Details" asp-route-id="@contentId" class="btn btn-primary btn-sm">
+                                        @T["Open"]
+                                    </a>
+                                }
+                                <a asp-controller="Reviews" asp-action="Edit" asp-route-id="@review.Id" class="btn btn-outline-light btn-sm">
+                                    @T["Edit"]
+                                </a>
+                                <a asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" class="btn btn-outline-danger btn-sm">
+                                    @T["Delete"]
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

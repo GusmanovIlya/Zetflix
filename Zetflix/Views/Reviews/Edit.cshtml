@@ -1,0 +1,59 @@
+@model Zetflix.ViewModels.ReviewCreateViewModel
+
+@{
+    ViewData["Title"] = T["EditReview"];
+}
+
+<section>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 rounded-4">
+                <div class="card-body p-4 p-xl-5">
+                    <span class="text-primary fw-semibold">@T["Reviews"]</span>
+                    <h1 class="mt-2 mb-4">@T["EditReview"]</h1>
+
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Rating" class="form-label">@T["Rating"]</label>
+                            <input asp-for="Rating" class="form-control" type="number" min="1" max="5" />
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Comment" class="form-label">@T["Comment"]</label>
+                            <textarea asp-for="Comment" class="form-control" rows="5"></textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MovieId" class="form-label">@T["Movie"]</label>
+                                <select asp-for="MovieId" asp-items="Model.Movies" class="form-select">
+                                    <option value="">@T["NotSpecified"]</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="ShowId" class="form-label">@T["Show"]</label>
+                                <select asp-for="ShowId" asp-items="Model.Shows" class="form-select">
+                                    <option value="">@T["NotSpecified"]</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-primary">@T["Save"]</button>
+                            <a asp-controller="Reviews" asp-action="Index" class="btn btn-outline-light">@T["Back"]</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

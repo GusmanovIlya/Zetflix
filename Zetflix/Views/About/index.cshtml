@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "О нас";
+}
+
+<section class="mb-5">
+    <div class="card border-0 rounded-4 overflow-hidden">
+        <div class="row g-0 align-items-stretch">
+            <div class="col-lg-5">
+                <div class="h-100" style="min-height: 420px; background: linear-gradient(180deg, rgba(20,20,20,0.10) 0%, rgba(20,20,20,0.35) 100%), url('/assets/images/pages/01.webp') center/cover no-repeat;">
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="card-body p-4 p-xl-5">
+                    <span class="text-primary fw-semibold">О платформе</span>
+                    <h1 class="mt-2 mb-4">О нас</h1>
+
+                    <p class="text-body-secondary fs-5 mb-4">
+                        Zetflix — это учебный проект современной медиа-платформы для просмотра фильмов, сериалов и видео-контента
+                        с пользовательским интерфейсом, профилем, отзывами и административной панелью.
+                    </p>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card bg-body border-0 rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="mb-2">Цель проекта</h6>
+                                    <p class="mb-0 text-body-secondary">
+                                        Создать удобное веб-приложение с динамическим контентом и понятной структурой.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card bg-body border-0 rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="mb-2">Технологии</h6>
+                                    <p class="mb-0 text-body-secondary">
+                                        ASP.NET MVC, Entity Framework Core, PostgreSQL, Razor Views и шаблон Streamit.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card bg-body border-0 rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="mb-2">Пользовательские функции</h6>
+                                    <p class="mb-0 text-body-secondary">
+                                        Просмотр фильмов, сериалов, жанров, профиля и отзывов.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card bg-body border-0 rounded-4 h-100">
+                                <div class="card-body p-4">
+                                    <h6 class="mb-2">Расширяемость</h6>
+                                    <p class="mb-0 text-body-secondary">
+                                        Проект можно развивать дальше, добавляя актеров, мерч, подписки и дополнительные модули.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                            Вернуться на главную
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

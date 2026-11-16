@@ -1,0 +1,120 @@
+@model Zetflix.ViewModels.PaginatedList<Zetflix.Models.Show>
+
+@{
+    ViewData["Title"] = T["Shows"];
+    var genres = ViewBag.Genres as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new();
+    var search = ViewBag.Search as string;
+    var genreId = ViewBag.GenreId as int?;
+    var hasFilters = !string.IsNullOrWhiteSpace(search) || genreId != null;
+}
+
+<section class="streamit-list-hero" style="--hero-image: url('/assets/images/mega-menu/tv-show.webp');">
+    <div class="col-xl-7 col-lg-9">
+        <span class="text-primary fw-semibold text-uppercase letter-spacing-1">@T["Catalog"]</span>
+        <h1 class="texture-text text-uppercase my-3">@T["Shows"]</h1>
+        <p class="movie-banner-text fs-5 mb-4">@T["FeaturedShowsText"]</p>
+        <div class="d-flex flex-wrap gap-3">
+            <a asp-controller="Videos" asp-action="Index" asp-route-type="episodes" class="btn btn-primary">
+                <i class="ph-fill ph-play me-2"></i>@T["StreamNow"]
+            </a>
+            <a asp-controller="Genres" asp-action="Index" class="btn btn-outline-light">
+                @T["Genres"]
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="streamit-filter-panel p-4 mb-5">
+    <form asp-controller="Shows" asp-action="Index" method="get" class="row g-3 align-items-end" data-ajax-filter="true" data-ajax-target="#show-catalog-results">
+        <div class="col-lg-5">
+            <label class="form-label">@T["Search"]</label>
+            <input type="search" name="search" value="@search" class="form-control" placeholder="@T["ShowTitle"]" />
+        </div>
+        <div class="col-lg-4">
+            <label class="form-label">@T["Genre"]</label>
+            <select name="genreId" class="form-select" asp-items="genres">
+                <option value="">@T["AllGenres"]</option>
+            </select>
+        </div>
+        <div class="col-lg-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">@T["Apply"]</button>
+            @if (hasFilters)
+            {
+                <a asp-controller="Shows" asp-action="Index" class="btn btn-outline-light" data-ajax-link="true" data-ajax-target="#show-catalog-results" data-ajax-reset-form="true">@T["Reset"]</a>
+            }
+        </div>
+    </form>
+</section>
+
+<div id="show-catalog-results" data-ajax-results>
+    @if (!Model.Any())
+    {
+        <div class="card border-0 rounded-4">
+            <div class="card-body p-4">
+                <p class="mb-0">@T["ShowsNotFound"]</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <section>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+                @foreach (var show in Model)
+                {
+                    var posterUrl = string.IsNullOrWhiteSpace(show.PosterUrl) ? "/assets/images/pages/01.webp" : show.PosterUrl;
+                    var showGenres = show.ShowGenres
+                        .Where(showGenre => showGenre.Genre != null)
+                        .Select(showGenre => showGenre.Genre!.Name)
+                        .ToList();
+                    var episodeCount = show.Seasons.Sum(season => season.Episodes.Count);
+
+                    <div class="col">
+                        <article class="streamit-poster-card">
+                            <div class="streamit-poster" style="--poster-image: url('@posterUrl');"></div>
+                            <div class="streamit-card-overlay">
+                                <div class="w-100">
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        <span class="badge bg-primary">@show.ReleaseYear</span>
+                                        <span class="badge bg-warning text-black">@show.Seasons.Count @T["SeasonsShort"]</span>
+                                        <span class="badge bg-secondary-subtle text-secondary">@episodeCount @T["EpisodesShort"]</span>
+                                    </div>
+                                    <h4 class="streamit-card-title mb-2">@show.Title</h4>
+                                    <div class="streamit-card-meta mb-3 line-clamp-2">@show.Description</div>
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        @foreach (var genre in showGenres.Take(2))
+                                        {
+                                            <span class="badge bg-secondary-subtle text-secondary">@genre</span>
+                                        }
+                                    </div>
+                                    <a asp-controller="Shows" asp-action="Details" asp-route-id="@show.Id" class="btn btn-primary btn-sm">
+                                        @T["Details"]
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        </section>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="mt-5" aria-label="@T["ShowPagination"]">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                        <a class="page-link" asp-controller="Shows" asp-action="Index" asp-route-search="@search" asp-route-genreId="@genreId" asp-route-page="@(Model.PageIndex - 1)">@T["Back"]</a>
+                    </li>
+                    @for (var pageNumber = 1; pageNumber <= Model.TotalPages; pageNumber++)
+                    {
+                        <li class="page-item @(pageNumber == Model.PageIndex ? "active" : "")">
+                            <a class="page-link" asp-controller="Shows" asp-action="Index" asp-route-search="@search" asp-route-genreId="@genreId" asp-route-page="@pageNumber">@pageNumber</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                        <a class="page-link" asp-controller="Shows" asp-action="Index" asp-route-search="@search" asp-route-genreId="@genreId" asp-route-page="@(Model.PageIndex + 1)">@T["Next"]</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    }
+</div>

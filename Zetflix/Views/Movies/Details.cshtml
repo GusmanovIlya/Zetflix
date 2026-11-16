@@ -1,0 +1,43 @@
+@model Zetflix.Models.Movie
+
+@{
+    ViewData["Title"] = Model.Title;
+    var posterUrl = string.IsNullOrWhiteSpace(Model.PosterUrl) ? "/assets/images/pages/01.webp" : Model.PosterUrl;
+    var genres = Model.MovieGenres
+        .Where(movieGenre => movieGenre.Genre != null)
+        .Select(movieGenre => movieGenre.Genre!.Name)
+        .ToList();
+    var rating = ViewBag.Rating as Zetflix.ViewModels.ContentRatingViewModel
+        ?? new Zetflix.ViewModels.ContentRatingViewModel(0, 0);
+}
+
+<section class="streamit-list-hero" style="--hero-image: url('@posterUrl');">
+    <div class="col-xl-7 col-lg-9">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="badge bg-primary px-3 py-2">@Model.ReleaseYear</span>
+            <span class="badge bg-warning text-black px-3 py-2">
+                <i class="ph-fill ph-star me-1"></i>
+                @(rating.ReviewCount > 0 ? $"{rating.AverageRating:0.0} / 5" : T["NoRating"])
+            </span>
+        </div>
+        <h1 class="texture-text text-uppercase mb-3">@Model.Title</h1>
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            @foreach (var genre in genres)
+            {
+                <span class="badge bg-secondary-subtle text-secondary">@genre</span>
+            }
+        </div>
+        <p class="movie-banner-text fs-5 mb-4 col-xl-9">@Model.Description</p>
+        <div class="d-flex flex-wrap gap-2">
+            @if (!string.IsNullOrWhiteSpace(Model.VideoUrl))
+            {
+                <a asp-controller="Movies" asp-action="Watch" asp-route-id="@Model.Id" class="btn btn-primary">
+                    <i class="ph-fill ph-play me-2"></i>@T["Watch"]
+                </a>
+            }
+            <a asp-controller="Movies" asp-action="Index" class="btn btn-outline-light">
+                @T["Back"]
+            </a>
+        </div>
+    </div>
+</section>

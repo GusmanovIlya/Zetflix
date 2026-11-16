@@ -1,0 +1,149 @@
+@model Zetflix.ViewModels.VideoIndexViewModel
+
+@{
+    ViewData["Title"] = T["Videos"];
+}
+
+<section class="overflow-hidden">
+    <div class="card text-white border-0 rounded-4 overflow-hidden">
+        <div class="position-relative" style="min-height: 430px; background: linear-gradient(90deg, rgba(14,14,14,0.95) 0%, rgba(14,14,14,0.74) 45%, rgba(14,14,14,0.35) 100%), url('/assets/images/video/video-banner-1.webp') center/cover no-repeat;">
+            <div class="container-fluid h-100 position-relative">
+                <div class="row align-items-center h-100 py-5">
+                    <div class="col-12 col-lg-7">
+                        <span class="badge rounded-pill text-bg-danger mb-3 px-3 py-2">@T["Videos"]</span>
+                        <h1 class="display-4 fw-bold mb-3 text-white">@T["VideoLibrary"]</h1>
+                        <p class="fs-5 text-white-50 mb-4">@T["ChooseVideos"]</p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a asp-controller="Movies" asp-action="Index" class="btn btn-primary">@T["Movies"]</a>
+                            <a asp-controller="Shows" asp-action="Index" class="btn btn-outline-light">@T["Shows"]</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding-top">
+    <div class="card bg-body border-0 rounded-4">
+        <div class="card-body p-4">
+            <form asp-controller="Videos" asp-action="Index" method="get" class="row g-3 align-items-end" data-ajax-filter="true" data-ajax-target="#video-catalog-results">
+                <div class="col-lg-6">
+                    <label class="form-label">@T["Search"]</label>
+                    <input type="search" name="search" value="@Model.Search" class="form-control" placeholder="@T["VideoSearchPlaceholder"]" />
+                </div>
+                <div class="col-lg-3">
+                    <label class="form-label">@T["VideoType"]</label>
+                    <select name="type" class="form-select">
+                        <option value="all" selected="@(Model.Type == "all")">@T["AllVideos"]</option>
+                        <option value="movies" selected="@(Model.Type == "movies")">@T["Movies"]</option>
+                        <option value="episodes" selected="@(Model.Type == "episodes")">@T["Episodes"]</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-grow-1">@T["Apply"]</button>
+                    @if (!string.IsNullOrWhiteSpace(Model.Search) || Model.Type != "all")
+                    {
+                        <a asp-controller="Videos" asp-action="Index" class="btn btn-secondary" data-ajax-link="true" data-ajax-target="#video-catalog-results" data-ajax-reset-form="true">@T["Reset"]</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div id="video-catalog-results" data-ajax-results>
+    @if (!Model.HasVideos)
+    {
+        <section class="section-padding-top">
+            <div class="card border-0 rounded-4">
+                <div class="card-body p-4">
+                    <p class="mb-0">@T["VideosNotFound"]</p>
+                </div>
+            </div>
+        </section>
+    }
+
+    @if (Model.Movies.Any())
+    {
+        <section class="section-padding-top">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <span class="text-primary fw-semibold">@T["Movies"]</span>
+                <h2 class="mb-0">@T["MovieVideos"]</h2>
+            </div>
+            <a asp-controller="Movies" asp-action="Index" class="btn btn-outline-light">@T["AllMovies"]</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+            @foreach (var movie in Model.Movies)
+            {
+                var posterUrl = string.IsNullOrWhiteSpace(movie.PosterUrl) ? "/assets/images/pages/01.webp" : movie.PosterUrl;
+                var movieGenres = movie.MovieGenres
+                    .Where(movieGenre => movieGenre.Genre != null)
+                    .Select(movieGenre => movieGenre.Genre!.Name)
+                    .Take(2)
+                    .ToList();
+
+                <div class="col">
+                    <div class="card border-0 rounded-4 h-100 overflow-hidden">
+                        <div style="height: 300px; background: linear-gradient(180deg, rgba(20,20,20,0.08) 0%, rgba(20,20,20,0.78) 100%), url('@posterUrl') center/cover no-repeat;">
+                            <div class="h-100 d-flex flex-column justify-content-end p-3">
+                                <span class="badge bg-primary align-self-start">@movie.ReleaseYear</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="mb-3">@movie.Title</h5>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                @foreach (var genre in movieGenres)
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary">@genre</span>
+                                }
+                            </div>
+                            <p class="text-body-secondary flex-grow-1">@movie.Description</p>
+                            <a asp-controller="Movies" asp-action="Watch" asp-route-id="@movie.Id" class="btn btn-primary btn-sm mt-3">@T["Watch"]</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        </section>
+    }
+
+    @if (Model.Episodes.Any())
+    {
+        <section class="section-padding-top">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <span class="text-primary fw-semibold">@T["Shows"]</span>
+                <h2 class="mb-0">@T["EpisodeVideos"]</h2>
+            </div>
+            <a asp-controller="Shows" asp-action="Index" class="btn btn-outline-light">@T["AllShows"]</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+            @foreach (var episode in Model.Episodes)
+            {
+                var show = episode.Season?.Show;
+                var posterUrl = string.IsNullOrWhiteSpace(show?.PosterUrl) ? "/assets/images/pages/01.webp" : show!.PosterUrl;
+
+                <div class="col">
+                    <div class="card border-0 rounded-4 h-100 overflow-hidden">
+                        <div style="height: 260px; background: linear-gradient(180deg, rgba(20,20,20,0.08) 0%, rgba(20,20,20,0.78) 100%), url('@posterUrl') center/cover no-repeat;">
+                            <div class="h-100 d-flex flex-column justify-content-end p-3">
+                                <span class="badge bg-warning text-black align-self-start">@T["Episode"] @episode.EpisodeNumber</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="mb-2">@(show?.Title ?? T["Shows"])</h5>
+                            <p class="text-body-secondary mb-3">@episode.Title</p>
+                            <p class="text-body-secondary flex-grow-1">@episode.Description</p>
+                            <a asp-controller="Shows" asp-action="Watch" asp-route-id="@episode.Id" class="btn btn-primary btn-sm mt-3">@T["Watch"]</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        </section>
+    }
+</div>

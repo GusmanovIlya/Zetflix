@@ -1,0 +1,134 @@
+@model Zetflix.ViewModels.PaginatedList<Zetflix.Models.Movie>
+
+@{
+    ViewData["Title"] = T["Movies"];
+    var genres = ViewBag.Genres as List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? new();
+    var search = ViewBag.Search as string;
+    var genreId = ViewBag.GenreId as int?;
+    var hasFilters = !string.IsNullOrWhiteSpace(search) || genreId != null;
+    var movieRatings = ViewBag.MovieRatings as Dictionary<int, Zetflix.ViewModels.ContentRatingViewModel> ?? new();
+}
+
+<section class="streamit-list-hero" style="--hero-image: url('/assets/images/pages/01.webp');">
+    <div class="col-xl-7 col-lg-9">
+        <span class="text-primary fw-semibold text-uppercase letter-spacing-1">@T["Catalog"]</span>
+        <h1 class="texture-text text-uppercase my-3">@T["Movies"]</h1>
+        <p class="movie-banner-text fs-5 mb-4">@T["FeaturedMoviesText"]</p>
+        <div class="d-flex flex-wrap gap-3">
+            <a asp-controller="Videos" asp-action="Index" asp-route-type="movies" class="btn btn-primary">
+                <i class="ph-fill ph-play me-2"></i>@T["StreamNow"]
+            </a>
+            <a asp-controller="Genres" asp-action="Index" class="btn btn-outline-light">
+                @T["Genres"]
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="streamit-filter-panel p-4 mb-5">
+    <form asp-controller="Movies" asp-action="Index" method="get" class="row g-3 align-items-end" data-ajax-filter="true" data-ajax-target="#movie-catalog-results">
+        <div class="col-lg-5">
+            <label class="form-label">@T["Search"]</label>
+            <input type="search" name="search" value="@search" class="form-control" placeholder="@T["MovieTitle"]" />
+        </div>
+        <div class="col-lg-4">
+            <label class="form-label">@T["Genre"]</label>
+            <select name="genreId" class="form-select" asp-items="genres">
+                <option value="">@T["AllGenres"]</option>
+            </select>
+        </div>
+        <div class="col-lg-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">@T["Apply"]</button>
+            @if (hasFilters)
+            {
+                <a asp-controller="Movies" asp-action="Index" class="btn btn-outline-light" data-ajax-link="true" data-ajax-target="#movie-catalog-results" data-ajax-reset-form="true">@T["Reset"]</a>
+            }
+        </div>
+    </form>
+</section>
+
+<div id="movie-catalog-results" data-ajax-results>
+    @if (!Model.Any())
+    {
+        <div class="card border-0 rounded-4">
+            <div class="card-body p-4">
+                <p class="mb-0">@T["MoviesNotFound"]</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <section>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+                @foreach (var movie in Model)
+                {
+                    var posterUrl = string.IsNullOrWhiteSpace(movie.PosterUrl) ? "/assets/images/pages/01.webp" : movie.PosterUrl;
+                    var movieGenres = movie.MovieGenres
+                        .Where(movieGenre => movieGenre.Genre != null)
+                        .Select(movieGenre => movieGenre.Genre!.Name)
+                        .ToList();
+
+                    var rating = movieRatings.TryGetValue(movie.Id, out var currentRating)
+                        ? currentRating
+                        : new Zetflix.ViewModels.ContentRatingViewModel(0, 0);
+
+                    <div class="col">
+                        <article class="streamit-poster-card">
+                            <div class="streamit-poster" style="--poster-image: url('@posterUrl');"></div>
+                            <div class="streamit-card-overlay">
+                                <div class="w-100">
+                                    <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                                        <span class="badge bg-primary">@movie.ReleaseYear</span>
+                                        <span class="streamit-rating">
+                                            <i class="ph-fill ph-star"></i>
+                                            @(rating.ReviewCount > 0 ? rating.AverageRating.ToString("0.0") : "—")
+                                        </span>
+                                    </div>
+                                    <h4 class="streamit-card-title mb-2">@movie.Title</h4>
+                                    <div class="streamit-card-meta mb-3 line-clamp-2">@movie.Description</div>
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+                                        @foreach (var genre in movieGenres.Take(2))
+                                        {
+                                            <span class="badge bg-secondary-subtle text-secondary">@genre</span>
+                                        }
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @if (!string.IsNullOrWhiteSpace(movie.VideoUrl))
+                                        {
+                                            <a asp-controller="Movies" asp-action="Watch" asp-route-id="@movie.Id" class="btn btn-primary btn-sm">
+                                                <i class="ph-fill ph-play me-1"></i>@T["Watch"]
+                                            </a>
+                                        }
+                                        <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-light btn-sm">
+                                            @T["Details"]
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        </section>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="mt-5" aria-label="@T["MoviePagination"]">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                        <a class="page-link" asp-controller="Movies" asp-action="Index" asp-route-search="@search" asp-route-genreId="@genreId" asp-route-page="@(Model.PageIndex - 1)">@T["Back"]</a>
+                    </li>
+                    @for (var pageNumber = 1; pageNumber <= Model.TotalPages; pageNumber++)
+                    {
+                        <li class="page-item @(pageNumber == Model.PageIndex ? "active" : "")">
+                            <a class="page-link" asp-controller="Movies" asp-action="Index" asp-route-search="@search" asp-route-genreId="@genreId" asp-route-page="@pageNumber">@pageNumber</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                        <a class="page-link" asp-controller="Movies" asp-action="Index" asp-route-search="@search" asp-route-genreId="@genreId" asp-route-page="@(Model.PageIndex + 1)">@T["Next"]</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    }
+</div>

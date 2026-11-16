@@ -1,0 +1,208 @@
+@using System.Globalization
+@{
+    var currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var isEnglish = currentCulture == "en";
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+<!doctype html>
+<html lang="@currentCulture" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>@ViewData["Title"] - Zetflix</title>
+
+    <link rel="icon" type="image/png" href="~/assets/images/logo.png" />
+    <link rel="shortcut icon" type="image/png" href="~/assets/images/logo.png" />
+    <link rel="apple-touch-icon" href="~/assets/images/logo.png" />
+    <link rel="stylesheet" href="~/assets/css/core/libs.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/iconly/css/style.css" />
+    <link rel="stylesheet" href="~/assets/vendor/animate.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/swiperSlider/swiper.min.css" />
+    <link rel="stylesheet" href="~/assets/vendor/sweetalert2/sweetalert2.min.css" />
+    <link rel="stylesheet" href="~/assets/css/streamit.min.css?v=5.4.0" />
+    <link rel="stylesheet" href="~/assets/css/custom.min.css?v=5.4.0" />
+    <link rel="stylesheet" href="~/assets/css/rtl.min.css?v=5.4.0" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/assets/vendor/phosphor-icons/Fonts/regular/style.css" />
+    <link rel="stylesheet" href="~/assets/vendor/phosphor-icons/Fonts/duotone/style.css" />
+    <link rel="stylesheet" href="~/assets/vendor/phosphor-icons/Fonts/fill/style.css" />
+    <link rel="stylesheet" href="~/assets/vendor/streamit-font/iconly.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <span class="screen-darken"></span>
+
+    <div class="loader simple-loader">
+        <div class="loader-body">
+            <img src="~/assets/images/loader.gif" alt="loader" class="img-fluid" width="300" />
+        </div>
+    </div>
+
+    <main class="main-content">
+        <header class="header-center-home header-default header-sticky">
+            <nav class="nav navbar navbar-expand-xl navbar-light iq-navbar header-hover-menu py-xl-0">
+                <div class="container-fluid navbar-inner">
+                    <div class="d-flex align-items-center justify-content-between w-100 landing-header">
+                        <div class="d-flex align-items-center gap-3">
+                            <a class="navbar-brand text-primary me-0" asp-controller="Home" asp-action="Index">
+                                <img class="img-fluid logo" src="~/assets/images/logo.png" loading="lazy" alt="Zetflix" />
+                            </a>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <a asp-controller="Profile" asp-action="Index"
+                                   class="subscribe-btn btn btn-warning-subtle py-2 px-3">
+                                    <span class="d-flex align-items-center gap-2 text-warning">
+                                        <i class="ph-fill ph-user align-middle fs-6"></i>
+                                        <span>@User.Identity.Name</span>
+                                    </span>
+                                </a>
+                                <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
+                                    <button type="submit" class="btn btn-outline-light py-2 px-3">@T["Logout"]</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a asp-controller="Auth" asp-action="Login"
+                                   class="subscribe-btn btn btn-warning-subtle py-2 px-3">
+                                    <span class="d-flex align-items-center gap-2 text-warning">
+                                        <i class="ph-fill ph-user align-middle fs-6"></i>
+                                        <span>@T["Login"]</span>
+                                    </span>
+                                </a>
+                                <a asp-controller="Auth" asp-action="Register" class="btn btn-outline-light py-2 px-3">
+                                    @T["Register"]
+                                </a>
+                            }
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <ul class="navbar-nav iq-nav-menu list-unstyled d-flex flex-row gap-3 mb-0">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Home" asp-action="Index">@T["Home"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Movies" asp-action="Index">@T["Movies"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Shows" asp-action="Index">@T["Shows"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Videos" asp-action="Index">@T["Videos"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Genres" asp-action="Index">@T["Genres"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Reviews" asp-action="Index">@T["Reviews"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Subscriptions" asp-action="Index">@T["Plans"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="About" asp-action="Index">@T["About"]</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Contact" asp-action="Index">@T["Contacts"]</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <form asp-controller="Culture" asp-action="Set" method="post" class="m-0">
+                                <input type="hidden" name="culture" value="ru" />
+                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                <button type="submit" class="btn btn-sm @(currentCulture == "ru" ? "btn-primary" : "btn-outline-light")">RU</button>
+                            </form>
+                            <form asp-controller="Culture" asp-action="Set" method="post" class="m-0">
+                                <input type="hidden" name="culture" value="en" />
+                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                <button type="submit" class="btn btn-sm @(currentCulture == "en" ? "btn-primary" : "btn-outline-light")">EN</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <section class="section-padding">
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </section>
+
+        <footer class="footer-standard zetflix-footer">
+            <div class="container-fluid">
+                <div class="row g-4 py-4 align-items-start zetflix-footer-main">
+                    <div class="col-xl-5 col-lg-5">
+                        <a class="navbar-brand text-primary me-0 mb-3 d-inline-flex align-items-center" asp-controller="Home" asp-action="Index">
+                            <img class="img-fluid logo" src="~/assets/images/logo.png" loading="lazy" alt="Zetflix" />
+                        </a>
+                        <p class="mb-0 footer-description">
+                            @T["FooterDescription"]
+                        </p>
+                        <div class="footer-badges">
+                            <span>@T["Movies"]</span>
+                            <span>@T["Shows"]</span>
+                            <span>@T["Reviews"]</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 col-xl-2 ms-xl-auto">
+                        <h6 class="footer-title">@T["FooterSections"]</h6>
+                        <ul class="list-unstyled footer-menu">
+                            <li><a asp-controller="Movies" asp-action="Index">@T["Movies"]</a></li>
+                            <li><a asp-controller="Shows" asp-action="Index">@T["Shows"]</a></li>
+                            <li><a asp-controller="Videos" asp-action="Index">@T["Videos"]</a></li>
+                            <li><a asp-controller="Genres" asp-action="Index">@T["Genres"]</a></li>
+                            <li><a asp-controller="Subscriptions" asp-action="Index">@T["Plans"]</a></li>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <li><a asp-controller="Profile" asp-action="Index">@T["Profile"]</a></li>
+                            }
+                            else
+                            {
+                                <li><a asp-controller="Auth" asp-action="Login">@T["SignIn"]</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 col-xl-2">
+                        <h6 class="footer-title">@T["FooterInfo"]</h6>
+                        <ul class="list-unstyled footer-menu">
+                            <li><a asp-controller="Reviews" asp-action="Index">@T["Reviews"]</a></li>
+                            <li><a asp-controller="About" asp-action="Index">@T["About"]</a></li>
+                            <li><a asp-controller="Contact" asp-action="Index">@T["Contacts"]</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <span>© @DateTime.Now.Year Zetflix</span>
+                    <span>@(isEnglish ? "Streaming catalog semester project" : "Стриминговый каталог для семестровой работы")</span>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <div id="back-to-top" class="back-to-top" style="display: none;">
+        <a class="p-0 btn bg-primary btn-sm position-fixed top border-0 rounded-circle text-white" id="top" href="#top">
+            <i class="ph ph-caret-up fw-bold"></i>
+        </a>
+    </div>
+
+    <script src="~/assets/js/core/libs.min.js"></script>
+    <script src="~/assets/vendor/sweetalert2/sweetalert2.min.js" async></script>
+    <script src="~/assets/js/plugins/sweet-alert.js" defer></script>
+    <script src="~/assets/vendor/swiperSlider/swiper.min.js"></script>
+    <script src="~/assets/vendor/lodash/lodash.min.js"></script>
+    <script src="~/assets/js/core/external.min.js"></script>
+    <script src="~/assets/js/plugins/countdown.js"></script>
+    <script src="~/assets/js/utility.js"></script>
+    <script src="~/assets/js/setting.js"></script>
+    <script src="~/assets/js/setting-init.js" defer></script>
+    <script src="~/assets/js/streamit.js" defer></script>
+    <script src="~/assets/js/swiper.js" defer></script>
+    <script src="~/js/site.js" asp-append-version="true" defer></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

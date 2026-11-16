@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = T["ServerError"];
+}
+
+<section class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="card border-0 rounded-4 text-center p-4 p-xl-5" style="max-width: 760px; width: 100%;">
+        <div class="mb-4">
+            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">500</span>
+        </div>
+
+        <h1 class="display-2 fw-bold text-primary mb-3">@T["ServerErrorTitle"]</h1>
+
+        <p class="text-body-secondary fs-5 mb-4">
+            @T["ServerErrorText"]
+        </p>
+
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                @T["HomeButton"]
+            </a>
+            <a asp-controller="Contact" asp-action="Index" class="btn btn-outline-light">
+                @T["ContactSupport"]
+            </a>
+        </div>
+    </div>
+</section>

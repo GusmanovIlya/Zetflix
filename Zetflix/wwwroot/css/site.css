@@ -1,0 +1,490 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+a {
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.main-content {
+  background:
+    radial-gradient(circle at 85% 8%, rgba(229, 9, 20, .16), transparent 28rem),
+    radial-gradient(circle at 12% 34%, rgba(90, 38, 255, .12), transparent 22rem),
+    #000;
+}
+
+.section-padding,
+.section-padding-top {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.section-padding-top:first-child,
+.zetflix-page-hero:first-child {
+  margin-top: -1px;
+}
+
+.zetflix-page-hero {
+  position: relative;
+  min-height: 420px;
+  display: flex;
+  align-items: flex-end;
+  padding: 9rem 4.5rem 4.5rem;
+  overflow: hidden;
+  background-image:
+    linear-gradient(90deg, rgba(0, 0, 0, .96) 0%, rgba(0, 0, 0, .76) 46%, rgba(0, 0, 0, .4) 100%),
+    linear-gradient(0deg, #000 0%, rgba(0, 0, 0, .08) 42%),
+    var(--hero-image);
+  background-position: center;
+  background-size: cover;
+}
+
+.zetflix-page-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 9rem;
+  background: linear-gradient(180deg, transparent, #000);
+  pointer-events: none;
+}
+
+.zetflix-page-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.texture-text {
+  font-size: clamp(3rem, 7vw, 6.75rem);
+  line-height: .9;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.letter-spacing-1 {
+  letter-spacing: .08em;
+}
+
+.movie-banner-text,
+.text-body-secondary {
+  color: rgba(255, 255, 255, .68) !important;
+}
+
+.card,
+.zetflix-glass-card {
+  background: #141414;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .35);
+}
+
+.zetflix-glass-card {
+  background: linear-gradient(180deg, rgba(25, 25, 25, .96), rgba(14, 14, 14, .96));
+}
+
+.form-control,
+.form-select {
+  min-height: 3.25rem;
+  color: #fff;
+  background: #1b1b1b;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 0;
+}
+
+.form-control:focus,
+.form-select:focus {
+  color: #fff;
+  background: #202020;
+  border-color: #e50914;
+  box-shadow: 0 0 0 .2rem rgba(229, 9, 20, .18);
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, .42);
+}
+
+.form-label {
+  color: rgba(255, 255, 255, .78);
+  font-weight: 600;
+}
+
+.btn-primary {
+  --bs-btn-bg: #e50914;
+  --bs-btn-border-color: #e50914;
+  --bs-btn-hover-bg: #bf000a;
+  --bs-btn-hover-border-color: #bf000a;
+  --bs-btn-active-bg: #a90009;
+  --bs-btn-active-border-color: #a90009;
+}
+
+.btn-outline-light:hover,
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+.alert-success {
+  color: #d7ffe6;
+  background: rgba(20, 148, 72, .2);
+  border-color: rgba(20, 148, 72, .42);
+}
+
+.alert-warning {
+  color: #ffe8b8;
+  background: rgba(255, 184, 77, .16);
+  border-color: rgba(255, 184, 77, .35);
+}
+
+.text-danger {
+  color: #ff7a83 !important;
+}
+
+.streamit-list-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+  margin: -1.5rem -1.5rem 3rem;
+  padding: 7.5rem 4rem 4rem;
+  display: flex;
+  align-items: flex-end;
+  background-image:
+    linear-gradient(90deg, rgba(0, 0, 0, .98) 0%, rgba(0, 0, 0, .82) 42%, rgba(0, 0, 0, .35) 100%),
+    linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0) 46%),
+    var(--hero-image);
+  background-size: cover;
+  background-position: center;
+}
+
+.streamit-list-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 8rem;
+  background: linear-gradient(180deg, transparent, #000);
+}
+
+.streamit-list-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.streamit-filter-panel {
+  margin-top: -5rem;
+  position: relative;
+  z-index: 2;
+  background: rgba(18, 18, 18, .94);
+  border: 1px solid rgba(255, 255, 255, .1);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+}
+
+.streamit-poster-card {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  border-radius: .25rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  min-height: 100%;
+  box-shadow: none;
+}
+
+.streamit-poster {
+  aspect-ratio: 2 / 3;
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 48%, rgba(0, 0, 0, .92) 100%),
+    var(--poster-image);
+  background-size: cover;
+  background-position: center;
+  transition: transform .35s ease, filter .35s ease;
+}
+
+.streamit-poster-card:hover .streamit-poster {
+  transform: scale(1.045);
+  filter: brightness(.82);
+}
+
+.streamit-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  background: linear-gradient(180deg, transparent 24%, rgba(0, 0, 0, .88) 100%);
+}
+
+.streamit-card-title {
+  font-size: 1.05rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.streamit-card-meta {
+  font-size: .8125rem;
+  color: rgba(255, 255, 255, .72);
+}
+
+.streamit-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  color: #f8c51c;
+  font-weight: 700;
+}
+
+.zetflix-footer {
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  background:
+    linear-gradient(180deg, rgba(18, 18, 18, .72), #000 52%),
+    radial-gradient(circle at 8% 0%, rgba(229, 9, 20, .12), transparent 22rem);
+}
+
+.zetflix-footer-main {
+  max-width: 1760px;
+  margin: 0 auto;
+}
+
+.zetflix-footer .logo {
+  max-height: 54px;
+  width: auto;
+}
+
+.zetflix-footer .footer-description {
+  max-width: 520px;
+  color: rgba(255, 255, 255, .78);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.zetflix-footer .footer-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: 1.25rem;
+}
+
+.zetflix-footer .footer-badges span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: .35rem .7rem;
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .04);
+  color: rgba(255, 255, 255, .78);
+  font-size: .82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.zetflix-footer .footer-title {
+  position: relative;
+  margin-bottom: 1rem;
+  padding-bottom: .65rem;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.zetflix-footer .footer-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2.25rem;
+  height: 2px;
+  background: #e50914;
+}
+
+.zetflix-footer .footer-menu {
+  margin-bottom: 0;
+}
+
+.zetflix-footer .footer-menu li + li {
+  margin-top: .7rem;
+}
+
+.zetflix-footer .footer-menu a {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: rgba(255, 255, 255, .68);
+  font-size: .98rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.zetflix-footer .footer-menu a::before {
+  content: "";
+  width: .35rem;
+  height: .35rem;
+  border-radius: 999px;
+  background: rgba(229, 9, 20, .65);
+  opacity: .55;
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.zetflix-footer .footer-menu a:hover {
+  color: #e50914;
+  transform: translateX(.15rem);
+}
+
+.zetflix-footer .footer-menu a:hover::before {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.zetflix-footer .footer-bottom {
+  max-width: 1760px;
+  margin: .25rem auto 0;
+  padding: 1rem 0 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  color: rgba(255, 255, 255, .5);
+  font-size: .9rem;
+}
+
+.realtime-card {
+  position: sticky;
+  top: 6rem;
+  background:
+    linear-gradient(180deg, rgba(24, 24, 24, .98), rgba(12, 12, 12, .98)),
+    radial-gradient(circle at 100% 0%, rgba(229, 9, 20, .18), transparent 16rem);
+}
+
+.realtime-feed {
+  display: grid;
+  gap: .8rem;
+  max-height: 26rem;
+  overflow: auto;
+}
+
+.realtime-feed-empty,
+.realtime-feed-item {
+  padding: .95rem 1rem;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: rgba(255, 255, 255, .04);
+}
+
+.realtime-feed-empty {
+  color: rgba(255, 255, 255, .62);
+}
+
+.realtime-feed-item strong {
+  color: #fff;
+}
+
+.realtime-feed-item span,
+.realtime-feed-item p {
+  color: rgba(255, 255, 255, .62);
+  font-size: .9rem;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+[data-ajax-results] {
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+[data-ajax-results].ajax-loading {
+  opacity: .45;
+  transform: translateY(.25rem);
+  pointer-events: none;
+}
+
+.zetflix-player-shell {
+  min-height: calc(100vh - 10rem);
+  display: grid;
+  place-items: center;
+  margin: -2rem -1.5rem 0;
+  background: #000;
+}
+
+.zetflix-player {
+  width: min(100%, 1280px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  display: block;
+}
+
+.zetflix-player-topbar {
+  position: fixed;
+  z-index: 20;
+  top: 1rem;
+  left: 1rem;
+}
+
+@media (max-width: 991.98px) {
+  .section-padding,
+  .section-padding-top {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .zetflix-page-hero {
+    min-height: 340px;
+    padding: 7.5rem 1.25rem 3rem;
+  }
+
+  .streamit-list-hero {
+    min-height: 340px;
+    margin: -1rem -1rem 2rem;
+    padding: 7rem 1.25rem 3rem;
+  }
+
+  .streamit-filter-panel {
+    margin-top: -3rem;
+  }
+
+  .zetflix-player-shell {
+    min-height: calc(100vh - 7rem);
+    margin: -1.5rem -1rem 0;
+  }
+
+  .zetflix-footer {
+    margin-top: .5rem;
+  }
+
+  .zetflix-footer .footer-bottom {
+    flex-direction: column;
+  }
+
+  .realtime-card {
+    position: static;
+  }
+}

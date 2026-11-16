@@ -1,0 +1,69 @@
+@model List<Zetflix.Models.Subscription>
+
+@{
+    ViewData["Title"] = T["Plans"];
+}
+
+<section class="mb-5">
+    <div class="text-center mx-auto" style="max-width: 720px;">
+        <span class="text-primary fw-semibold">Zetflix Plans</span>
+        <h1 class="mt-2 mb-3">@T["ChoosePlan"]</h1>
+        <p class="text-body-secondary mb-0">
+            @T["PlansIntro"]
+        </p>
+    </div>
+</section>
+
+@if (!Model.Any())
+{
+    <div class="card border-0 rounded-4">
+        <div class="card-body p-4">
+            <p class="mb-0">@T["PlansEmpty"]</p>
+        </div>
+    </div>
+}
+else
+{
+    <section>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 justify-content-center">
+            @foreach (var subscription in Model)
+            {
+                <div class="col">
+                    <div class="card border-0 rounded-4 h-100">
+                        <div class="card-body p-4 p-xl-5 d-flex flex-column">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h3 class="mb-0">@subscription.Name</h3>
+                                <span class="badge bg-primary-subtle text-primary">@subscription.DurationInDays @T["Days"]</span>
+                            </div>
+
+                            <div class="mb-4">
+                                <span class="display-5 fw-bold">@subscription.Price.ToString("0")</span>
+                                <span class="text-body-secondary"> RUB</span>
+                            </div>
+
+                            <ul class="list-unstyled text-body-secondary flex-grow-1">
+                                <li class="mb-2"><i class="ph-fill ph-check-circle text-primary me-2"></i>@T["MoviesCatalog"]</li>
+                                <li class="mb-2"><i class="ph-fill ph-check-circle text-primary me-2"></i>@T["ShowsAndEpisodes"]</li>
+                                <li class="mb-2"><i class="ph-fill ph-check-circle text-primary me-2"></i>@T["ReviewsAndProfile"]</li>
+                            </ul>
+
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <form asp-controller="Subscriptions" asp-action="Choose" method="post" class="mt-4">
+                                    <input type="hidden" name="id" value="@subscription.Id" />
+                                    <button type="submit" class="btn btn-primary w-100">@T["SelectPlan"]</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a asp-controller="Auth" asp-action="Login" asp-route-returnUrl="/Subscriptions" class="btn btn-primary w-100 mt-4">
+                                    @T["SignInAndSelect"]
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}

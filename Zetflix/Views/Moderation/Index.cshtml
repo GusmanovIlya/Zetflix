@@ -1,0 +1,93 @@
+@model List<Zetflix.Models.Review>
+
+@{
+    ViewData["Title"] = T["Moderation"];
+}
+
+<section class="mb-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="col-lg-7">
+            <span class="text-primary fw-semibold text-uppercase letter-spacing-1">@T["Reviews"]</span>
+            <h1 class="texture-text text-uppercase mb-3">@T["ReviewModeration"]</h1>
+            <p class="movie-banner-text mb-0">@T["ModerationIntro"]</p>
+        </div>
+        <div class="text-lg-end">
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">@Model.Count @T["ReviewsCount"]</span>
+        </div>
+    </div>
+</section>
+
+@if (!Model.Any())
+{
+    <div class="card zetflix-glass-card border-0 rounded-4">
+        <div class="card-body p-4 p-xl-5 text-center">
+            <i class="ph-fill ph-star text-primary fs-1 d-block mb-3"></i>
+            <h4 class="mb-2">@T["ReviewModeration"]</h4>
+            <p class="text-body-secondary mb-0">@T["NoReviewsForModeration"]</p>
+        </div>
+    </div>
+}
+else
+{
+    <section>
+        <div class="card zetflix-glass-card border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-transparent border-secondary border-opacity-25 p-4">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <h4 class="mb-1">@T["Reviews"]</h4>
+                        <p class="text-body-secondary mb-0">@T["ModerationIntro"]</p>
+                    </div>
+                    <span class="badge bg-primary">@Model.Count</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>@T["User"]</th>
+                                <th>@T["Content"]</th>
+                                <th>@T["Rating"]</th>
+                                <th>@T["Comment"]</th>
+                                <th class="text-end">@T["Action"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var review in Model)
+                            {
+                                var contentTitle = review.Movie != null
+                                    ? review.Movie.Title
+                                    : review.Show != null ? review.Show.Title : T["ContentNotSpecified"];
+
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-semibold text-white">@(review.User?.UserName ?? T["Unknown"])</div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary-subtle text-secondary">@contentTitle</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-warning fw-semibold">
+                                            @review.Rating <i class="ph-fill ph-star"></i>
+                                        </span>
+                                    </td>
+                                    <td class="text-body-secondary" style="max-width: 520px;">
+                                        <span class="d-inline-block text-truncate w-100">@review.Comment</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <form asp-controller="Moderation" asp-action="DeleteReview" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@review.Id" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm me-4">
+                                                <i class="ph ph-trash me-1"></i>@T["Delete"]
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+}

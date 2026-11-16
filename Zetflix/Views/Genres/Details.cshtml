@@ -1,0 +1,121 @@
+@model Zetflix.ViewModels.GenreDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="mb-5">
+    <div class="card border-0 rounded-4 overflow-hidden">
+        <div class="card-body p-4 p-xl-5">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div>
+                    <span class="text-primary fw-semibold">Жанр</span>
+                    <h1 class="mt-2 mb-3">@Model.Name</h1>
+                    <p class="text-body-secondary mb-0">
+                        @((Model.Movies.Count + Model.Shows.Count)) материалов: @Model.Movies.Count фильмов и @Model.Shows.Count сериалов.
+                    </p>
+                </div>
+                <a asp-controller="Genres" asp-action="Index" class="btn btn-outline-light">
+                    Все жанры
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="mb-0">Фильмы</h3>
+    </div>
+
+    @if (!Model.Movies.Any())
+    {
+        <div class="card border-0 rounded-4">
+            <div class="card-body p-4">
+                <p class="mb-0">Фильмов в этом жанре пока нет.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+            @foreach (var movie in Model.Movies.OrderBy(movie => movie.Title))
+            {
+                var posterUrl = string.IsNullOrWhiteSpace(movie.PosterUrl) ? "/assets/images/pages/01.webp" : movie.PosterUrl;
+
+                <div class="col">
+                    <div class="card border-0 rounded-4 h-100 overflow-hidden">
+                        <div style="height: 300px; background: linear-gradient(180deg, rgba(20,20,20,0.08) 0%, rgba(20,20,20,0.72) 100%), url('@posterUrl') center/cover no-repeat;">
+                            <div class="h-100 d-flex flex-column justify-content-end p-3">
+                                <span class="badge bg-primary align-self-start">@movie.ReleaseYear</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="mb-3">@movie.Title</h5>
+                            <p class="text-body-secondary flex-grow-1">@movie.Description</p>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                @if (!string.IsNullOrWhiteSpace(movie.VideoUrl))
+                                {
+                                    <a asp-controller="Movies" asp-action="Watch" asp-route-id="@movie.Id" class="btn btn-primary btn-sm">
+                                        Смотреть
+                                    </a>
+                                }
+                                <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-light btn-sm">
+                                    Подробнее
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>
+
+<section>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="mb-0">Сериалы</h3>
+    </div>
+
+    @if (!Model.Shows.Any())
+    {
+        <div class="card border-0 rounded-4">
+            <div class="card-body p-4">
+                <p class="mb-0">Сериалов в этом жанре пока нет.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+            @foreach (var show in Model.Shows.OrderBy(show => show.Title))
+            {
+                var posterUrl = string.IsNullOrWhiteSpace(show.PosterUrl) ? "/assets/images/pages/01.webp" : show.PosterUrl;
+                var episodeCount = show.Seasons.Sum(season => season.Episodes.Count);
+
+                <div class="col">
+                    <div class="card border-0 rounded-4 h-100 overflow-hidden">
+                        <div style="height: 300px; background: linear-gradient(180deg, rgba(20,20,20,0.08) 0%, rgba(20,20,20,0.72) 100%), url('@posterUrl') center/cover no-repeat;">
+                            <div class="h-100 d-flex flex-column justify-content-end p-3">
+                                <div class="d-flex gap-2">
+                                    <span class="badge bg-primary">@show.ReleaseYear</span>
+                                    <span class="badge bg-warning text-black">@show.Seasons.Count сез.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="mb-3">@show.Title</h5>
+                            <p class="text-body-secondary flex-grow-1">@show.Description</p>
+                            <div class="d-flex align-items-center justify-content-between gap-3 mt-3">
+                                <span class="text-body-secondary small">@episodeCount эп.</span>
+                                <a asp-controller="Shows" asp-action="Details" asp-route-id="@show.Id" class="btn btn-primary btn-sm">
+                                    Подробнее
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

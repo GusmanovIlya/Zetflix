@@ -1,0 +1,18 @@
+@model Zetflix.Models.Movie
+
+@{
+    ViewData["Title"] = $"{T["Watch"]} {Model.Title}";
+    var posterUrl = string.IsNullOrWhiteSpace(Model.PosterUrl) ? "/assets/images/pages/01.webp" : Model.PosterUrl;
+    var videoUrl = Url.Content(Model.VideoUrl);
+    var videoType = Zetflix.Services.PlayableVideoUrl.GetContentType(Model.VideoUrl);
+}
+
+<a asp-controller="Movies" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-light zetflix-player-topbar">
+    <i class="ph ph-caret-left me-2"></i>@T["Back"]
+</a>
+
+<section class="zetflix-player-shell">
+    <video class="zetflix-player" controls autoplay playsinline preload="metadata" poster="@posterUrl" controlsList="nodownload">
+        <source src="@videoUrl" type="@videoType" />
+    </video>
+</section>

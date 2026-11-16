@@ -1,0 +1,207 @@
+@model Zetflix.ViewModels.HomeIndexViewModel
+
+@{
+    ViewData["Title"] = Model.Settings.SiteName;
+}
+
+<section class="overflow-hidden">
+    <div class="card text-white border-0 rounded-4 overflow-hidden">
+        <div class="position-relative" style="min-height: 560px; background: linear-gradient(90deg, rgba(14,14,14,0.94) 0%, rgba(14,14,14,0.82) 42%, rgba(14,14,14,0.45) 100%), url('/assets/images/pages/01.webp') center/cover no-repeat;">
+            <div class="position-absolute top-0 start-0 w-100 h-100"></div>
+            <div class="container-fluid h-100 position-relative">
+                <div class="row align-items-center min-vh-50 h-100 py-5">
+                    <div class="col-12 col-lg-7 col-xl-6">
+                        <span class="badge rounded-pill text-bg-danger mb-3 px-3 py-2">@Model.Settings.SiteName</span>
+                        <h1 class="display-4 fw-bold mb-3 text-white">@Model.Settings.HeroTitle</h1>
+                        <p class="fs-5 text-white-50 mb-4">
+                            @Model.Settings.HeroSubtitle
+                        </p>
+                        @if (Model.Settings.MaintenanceMode)
+                        {
+                            <div class="alert alert-warning border-0 mb-4">
+                                @T["MaintenanceMode"]
+                            </div>
+                        }
+                        <div class="d-flex flex-wrap gap-3">
+                            <a asp-controller="Movies" asp-action="Index" class="btn btn-primary">
+                                @T["WatchMovies"]
+                            </a>
+                            <a asp-controller="Shows" asp-action="Index" class="btn btn-light">
+                                @T["OpenShows"]
+                            </a>
+                            @if (Model.Settings.AllowRegistration)
+                            {
+                                <a asp-controller="Profile" asp-action="Index" class="btn btn-outline-light">
+                                    @T["Profile"]
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding-top">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card bg-body border-0 rounded-4 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="mb-0">@T["Movies"]</h5>
+                        <i class="ph-fill ph-film-strip text-primary fs-2"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">@Model.MovieCount</h2>
+                    <p class="text-body-secondary mb-3">@T["MoviesAvailable"]</p>
+                    <a asp-controller="Movies" asp-action="Index" class="text-primary text-decoration-none">
+                        @T["OpenSection"]
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-body border-0 rounded-4 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="mb-0">@T["Shows"]</h5>
+                        <i class="ph-fill ph-television text-primary fs-2"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">@Model.ShowCount</h2>
+                    <p class="text-body-secondary mb-3">@T["ShowsAvailable"]</p>
+                    <a asp-controller="Shows" asp-action="Index" class="text-primary text-decoration-none">
+                        @T["OpenSection"]
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-body border-0 rounded-4 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="mb-0">@T["Genres"]</h5>
+                        <i class="ph-fill ph-squares-four text-primary fs-2"></i>
+                    </div>
+                    <h2 class="fw-bold mb-2">@Model.GenreCount</h2>
+                    <p class="text-body-secondary mb-3">@T["GenresAvailable"]</p>
+                    <a asp-controller="Genres" asp-action="Index" class="text-primary text-decoration-none">
+                        @T["OpenSection"]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.FeaturedMovies.Any())
+{
+    <section class="section-padding-top">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <span class="text-primary fw-semibold">@T["Movies"]</span>
+                <h2 class="mb-0">@T["NowInCatalog"]</h2>
+            </div>
+            <a asp-controller="Movies" asp-action="Index" class="btn btn-outline-light">@T["AllMovies"]</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+            @foreach (var movie in Model.FeaturedMovies)
+            {
+                var posterUrl = string.IsNullOrWhiteSpace(movie.PosterUrl) ? "/assets/images/pages/01.webp" : movie.PosterUrl;
+                var movieGenres = movie.MovieGenres
+                    .Where(movieGenre => movieGenre.Genre != null)
+                    .Select(movieGenre => movieGenre.Genre!.Name)
+                    .Take(2)
+                    .ToList();
+
+                <div class="col">
+                    <div class="card border-0 rounded-4 h-100 overflow-hidden">
+                        <div style="height: 300px; background: linear-gradient(180deg, rgba(20,20,20,0.08) 0%, rgba(20,20,20,0.72) 100%), url('@posterUrl') center/cover no-repeat;">
+                            <div class="h-100 d-flex flex-column justify-content-end p-3">
+                                <span class="badge bg-primary align-self-start">@movie.ReleaseYear</span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="mb-3">@movie.Title</h5>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                @foreach (var genre in movieGenres)
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary">@genre</span>
+                                }
+                            </div>
+                            <p class="text-body-secondary flex-grow-1">@movie.Description</p>
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                @if (!string.IsNullOrWhiteSpace(movie.VideoUrl))
+                                {
+                                    <a asp-controller="Movies" asp-action="Watch" asp-route-id="@movie.Id" class="btn btn-primary btn-sm">
+                                        @T["Watch"]
+                                    </a>
+                                }
+                                <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-light btn-sm">
+                                    @T["Details"]
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+@if (Model.FeaturedShows.Any())
+{
+    <section class="section-padding-top">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <span class="text-primary fw-semibold">@T["Shows"]</span>
+                <h2 class="mb-0">@T["ContinueShows"]</h2>
+            </div>
+            <a asp-controller="Shows" asp-action="Index" class="btn btn-outline-light">@T["AllShows"]</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+            @foreach (var show in Model.FeaturedShows)
+            {
+                var posterUrl = string.IsNullOrWhiteSpace(show.PosterUrl) ? "/assets/images/pages/01.webp" : show.PosterUrl;
+                var showGenres = show.ShowGenres
+                    .Where(showGenre => showGenre.Genre != null)
+                    .Select(showGenre => showGenre.Genre!.Name)
+                    .Take(2)
+                    .ToList();
+                var episodeCount = show.Seasons.Sum(season => season.Episodes.Count);
+
+                <div class="col">
+                    <div class="card border-0 rounded-4 h-100 overflow-hidden">
+                        <div style="height: 300px; background: linear-gradient(180deg, rgba(20,20,20,0.08) 0%, rgba(20,20,20,0.72) 100%), url('@posterUrl') center/cover no-repeat;">
+                            <div class="h-100 d-flex flex-column justify-content-end p-3">
+                                <div class="d-flex gap-2">
+                                    <span class="badge bg-primary">@show.ReleaseYear</span>
+                                    <span class="badge bg-warning text-black">@show.Seasons.Count @T["SeasonsShort"]</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="mb-3">@show.Title</h5>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                @foreach (var genre in showGenres)
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary">@genre</span>
+                                }
+                            </div>
+                            <p class="text-body-secondary flex-grow-1">@show.Description</p>
+                            <div class="d-flex align-items-center justify-content-between gap-3 mt-3">
+                                <span class="text-body-secondary small">@episodeCount @T["EpisodesShort"]</span>
+                                <a asp-controller="Shows" asp-action="Details" asp-route-id="@show.Id" class="btn btn-primary btn-sm">
+                                    @T["Details"]
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}

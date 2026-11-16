@@ -1,0 +1,99 @@
+@model Zetflix.ViewModels.ContactViewModel
+
+@{
+    ViewData["Title"] = T["Contacts"];
+}
+
+<section class="zetflix-page-hero" style="--hero-image: url('/assets/images/pages/01.webp');">
+    <div class="container-fluid p-0">
+        <span class="text-primary fw-semibold text-uppercase letter-spacing-1">@Model.Settings.SiteName</span>
+        <h1 class="texture-text text-uppercase mb-3">@T["Contacts"]</h1>
+        <p class="movie-banner-text line-count-2 mb-0 col-lg-6">@T["ContactSubtitle"]</p>
+    </div>
+</section>
+
+<section class="section-padding-top">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card zetflix-glass-card border-0 rounded-4 h-100">
+                <div class="card-body p-4 p-xl-5">
+                    <span class="text-primary fw-semibold">@Model.Settings.SiteName</span>
+                    <h2 class="mt-2 mb-4">@T["Contacts"]</h2>
+
+                    <p class="text-body-secondary mb-4">@T["ContactIntro"]</p>
+
+                    <div class="mb-4">
+                        <h6 class="mb-2">Email</h6>
+                        <p class="mb-0 text-body-secondary">@Model.Settings.SupportEmail</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="mb-2">@T["Phone"]</h6>
+                        <p class="mb-0 text-body-secondary">+7 (900) 000-00-00</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="mb-2">@T["Address"]</h6>
+                        <p class="mb-0 text-body-secondary">@T["ProjectAddress"]</p>
+                    </div>
+
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light">@T["Home"]</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card zetflix-glass-card border-0 rounded-4 h-100">
+                <div class="card-body p-4 p-xl-5">
+                    <h3 class="mb-4">@T["ContactForm"]</h3>
+
+                    @if (Model.Sent == true)
+                    {
+                        <div class="alert alert-success">@T["ContactSent"]</div>
+                    }
+                    else if (Model.Sent == false)
+                    {
+                        <div class="alert alert-warning">@T["ContactSavedNoEmail"]</div>
+                    }
+
+                    <form asp-controller="Contact" asp-action="Index" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Name" class="form-label">@T["Name"]</label>
+                                <input asp-for="Name" class="form-control" placeholder="@T["NamePlaceholder"]" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label">Email</label>
+                                <input asp-for="Email" class="form-control" placeholder="@T["EmailPlaceholder"]" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Subject" class="form-label">@T["Subject"]</label>
+                                <input asp-for="Subject" class="form-control" placeholder="@T["SubjectPlaceholder"]" />
+                                <span asp-validation-for="Subject" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Message" class="form-label">@T["Message"]</label>
+                                <textarea asp-for="Message" class="form-control" rows="6" placeholder="@T["MessagePlaceholder"]"></textarea>
+                                <span asp-validation-for="Message" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">@T["Send"]</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
